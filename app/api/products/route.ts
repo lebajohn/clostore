@@ -1,46 +1,60 @@
 import { prisma } from "@/db/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-// ✅ GET all products
-export async function GET() {
-  const products = await prisma.product.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
 
-  return NextResponse.json(products);
-}
+    const category = searchParams.get("category");
+    const search = searchParams.get("search");
 
-// ✅ ADD product (Admin use)
-export async function POST(req: Request) {
-  const body = await req.json();
+    // New pagination params 
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "8");
+    const skip = (page - 1) * limit;
 
-  // validate the required fields
-  if (!body.name || !body.price || !body.category) {
+    // build filters dynamically
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const filters: any = {};
+
+    if (category && category !== "all") {
+      filters.category = category;
+    }
+
+    if (search) {
+      filters.name = {
+        contains: search,
+        mode: "insensitive",
+      };
+    }
+
+    // fetch products
+    const products = await prisma.product.findMany({
+      where: filters,
+      skip,
+      take: limit,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    // total count (for pagination UI)
+    const total = await prisma.product.count({
+      where: filters,
+    })
+
+    return NextResponse.json({
+      products,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    });
+
+  } catch (error) {
+    console.error("PRODUCT FETCH ERROR:", error);
     return NextResponse.json(
-      { error: "Missing required field"},
-      { status: 400 }
+      { error: "Failed to fetch products" },
+      { status: 500 }
     );
   }
-
-  // convert price safely 
-  const price = Number(body.price);
-
-  if (isNaN(price)) {
-    return NextResponse.json(
-       { error: "Invalid price"},
-      { status: 400 }  
-    );
-  }
-
-  const product = await prisma.product.create({
-    data: {
-      name: body.name,
-      category: body.category,
-      price,
-      imageUrl: body.imageUrl,
-      description: body.description,
-    },
-  });
-
-  return NextResponse.json(product);
 }
