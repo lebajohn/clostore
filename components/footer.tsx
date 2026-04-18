@@ -1,13 +1,15 @@
+import { APP_NAME } from "@/lib/constants";
 
-export default function Footer() {
-    return (
-        <footer className="border-t mt-10">
 
-            <div className="text-center py-6 text-sm text-gray-500">
-                 © {new Date().getFullYear()} Clostore. Made in ❤️ from Kenya.
-            </div>
-
-        </footer>
-    );
+const Footer = () => {
+    const currentYear = new Date().getFullYear();
     
+    return ( <footer className="border-t">
+        <div className="p-5 flex-center">
+            {currentYear} {APP_NAME}. All Rights Reserved 
+        </div>
+
+    </footer> );
 }
+ 
+export default Footer;

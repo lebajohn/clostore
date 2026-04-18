@@ -1,9 +1,19 @@
 
 
-export default function Loading() {
-    return (
-        <div className="flex items-center justify-center h-screen">
-            <p className="text-lg">Loading...</p>
-        </div>
-    );
+import Image from "next/image";
+import loader from "@/assets/loader.gif";
+
+
+const LoadingPage = () => {
+    return <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        width: '100vw'
+    }}>
+        <Image src={loader} height={150} width={150} alt="Loading..." />
+    </div>;
 }
+ 
+export default LoadingPage;
