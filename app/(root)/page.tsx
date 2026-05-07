@@ -6,8 +6,8 @@ const Homepage = () => {
     <>
     <ProductList 
     data={sampleData.products}
-    title="Newest arrival"
-    limit={4}
+    title="Latest Products"
+    limit={6}
     />
     </>
    );

@@ -7,7 +7,7 @@ import { Sheet,
     SheetDescription, 
     SheetTitle, 
     SheetTrigger } from "@/components/ui/sheet";
-// import UserButton from "./user-button";
+import UserButton from "./user-button";
 
 
 const Menu = () => {
@@ -19,26 +19,37 @@ const Menu = () => {
                     <ShoppingCart /> Cart
                     </Link>
                 </Button>
-                {/* <UserButton /> */}
+                <UserButton />
         </nav>
-        <nav className="md:hidden">
-            <Sheet>
-                <SheetTrigger className="align-middle">
-                 <EllipsisVertical />
-                </SheetTrigger>
-                <SheetContent className="flex flex-col items-start">
-                    <SheetTitle>Menu</SheetTitle>
-                    <ModeToggle />
-                    <Button asChild variant='ghost'>
-                        <Link href='/cart'>
-                        <ShoppingCart /> Cart
-                        </Link>
-                    </Button>
-                     {/* <UserButton /> */}
-                 <SheetDescription></SheetDescription>
-                </SheetContent>
-            </Sheet>
-        </nav>
+       
+       <nav className="md:hidden flex items-center gap-2">
+  
+  {/* Cart Button */}
+  <Button asChild variant="ghost" size="icon">
+    <Link href="/cart">
+      <ShoppingCart />
+    </Link>
+  </Button>
+
+  {/* Menu */}
+  <Sheet>
+    <SheetTrigger className="align-middle">
+      <EllipsisVertical />
+    </SheetTrigger>
+
+    <SheetContent className="flex flex-col items-start">
+      <SheetTitle>Menu</SheetTitle>
+
+      <ModeToggle />
+
+      <UserButton />
+
+      <SheetDescription />
+    </SheetContent>
+  </Sheet>
+
+</nav>
+
     </div> 
     );
 };
